@@ -1,0 +1,40 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./web
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    networks:
+      - mynet
+    volumes:
+      - web-data:/app/data
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+
+  mongo:
+    image: mongo:7.0.2
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: mydatabase
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - mynet
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  mynet:
+    driver: bridge
+
+volumes:
+  web-data:
+  mongo-data:
